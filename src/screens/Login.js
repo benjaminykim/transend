@@ -4,7 +4,7 @@ import { Button, Input } from "react-native-elements";
 import { useDispatch } from "react-redux";
 import { createWallet } from "../redux/store/users";
 
-export default function OnboardScreen() {
+export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const [seedPhrase, setSeedPhrase] = useState("");
 
@@ -23,17 +23,19 @@ export default function OnboardScreen() {
           title="Create New Wallet"
           onPress={() => {
             dispatch(createWallet(""));
+            navigation.navigation("Home");
           }}
         />
         <Button
           title="Create Dev Wallet"
-          onPress={() =>
+          onPress={() => {
             dispatch(
               createWallet(
                 "twelve behave concert casual address favorite genuine legend citizen certain turtle thrive"
               )
-            )
-          }
+            );
+            navigation.navigation("Home");
+          }}
         />
       </View>
       <View style={{ height: 20 }} />
@@ -47,7 +49,10 @@ export default function OnboardScreen() {
       />
       <Button
         title="Import Wallet"
-        onPress={() => dispatch(createWallet(seedPhrase))}
+        onPress={() => {
+          dispatch(createWallet(seedPhrase));
+          navigation.navigate("Home");
+        }}
       />
     </View>
   );
