@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { Button, Input } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { createWallet } from "../redux/store/users";
+import { createWallet, deleteSession } from "../redux/store/users";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -15,6 +15,10 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.container}>
         <Text style={styles.header}>Your Wallet</Text>
         <Text style={styles.body}>{walletData.address}</Text>
+        <Button
+          title="Delete Wallet"
+          onPress={() => dispatch(deleteSession())}
+        />
       </View>
     );
   }
@@ -34,7 +38,6 @@ export default function LoginScreen({ navigation }) {
           title="Create New Wallet"
           onPress={() => {
             dispatch(createWallet(""));
-            navigation.navigate("Home");
           }}
         />
         <Button
@@ -45,7 +48,6 @@ export default function LoginScreen({ navigation }) {
                 "twelve behave concert casual address favorite genuine legend citizen certain turtle thrive"
               )
             );
-            navigation.navigate("Home");
           }}
         />
       </View>
@@ -62,7 +64,6 @@ export default function LoginScreen({ navigation }) {
         title="Import Wallet"
         onPress={() => {
           dispatch(createWallet(seedPhrase));
-          navigation.navigate("Home");
         }}
       />
     </View>
