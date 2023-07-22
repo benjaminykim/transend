@@ -6,10 +6,12 @@ import { USDC_CONTRACT_ADDRESS, USDC_ABI, POLYGON_RPC_URL } from "./constants";
 export const executeTransaction = async (
   recipientAddress,
   amount,
-  currency
+  currency,
+  privateKey
 ) => {
+  console.log("attempt send");
   const provider = new ethers.providers.JsonRpcProvider(POLYGON_RPC_URL);
-  const wallet = new ethers.Wallet(walletData.privateKey, provider);
+  const wallet = new ethers.Wallet(privateKey, provider);
 
   const usdcContract = new ethers.Contract(
     USDC_CONTRACT_ADDRESS,

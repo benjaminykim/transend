@@ -93,7 +93,12 @@ export default function HomeScreen() {
       <View style={{ gap: 20 }}>
         <Button
           onPress={() =>
-            executeTransaction(scannedWallet, scannedAmount, currency)
+            executeTransaction(
+              scannedWallet,
+              scannedAmount,
+              currency,
+              walletData.privateKey
+            )
           }
           disabled={!currency || !scannedAmount || !scannedWallet}
           title="Send"
