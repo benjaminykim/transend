@@ -6,12 +6,90 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
+import { Button, Input } from "react-native-elements";
 import React, { useEffect, useState } from "react";
+import { getBalances } from "../utils/balanceOf";
+import { useSelector } from "react-redux";
+import { executeTransaction } from "../../src/utils/wallet";
+import { Dropdown } from "react-native-element-dropdown";
+import { currencyData } from "../utils/constants";
 
 export default function HomeScreen() {
+  const { walletData } = useSelector((state) => state.users);
+  const [balances, setBalances] = useState(null);
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [amount, setAmount] = useState("");
+  const [currency, setCurrency] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
+
+  const fetchBalances = async () => {
+    const fetchedBalances = await getBalances(walletData.address);
+    setBalances(fetchedBalances);
+  };
+
+  useEffect(() => {
+    fetchBalances();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text style={styles.title}>Send</Text>
+      <View
+        style={{
+          paddingHorizontal: 20,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "stretch",
+          width: "100%",
+        }}
+      >
+        <Input
+          placeholder="0x address or ENS"
+          onChangeText={setRecipientAddress}
+          value={recipientAddress}
+          autoCapitalize="none"
+        />
+        <Input
+          onChangeText={setAmount}
+          value={amount}
+          keyboardType="numeric"
+          placeholder="Amount"
+          autoCapitalize="none"
+        />
+        <Dropdown
+          style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+          data={currencyData}
+          search
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder={!isFocus ? "Select token" : "..."}
+          searchPlaceholder="Search..."
+          value={currency}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={(item) => {
+            setCurrency(item.value);
+            setIsFocus(false);
+          }}
+        />
+      </View>
+      <View style={{ gap: 20 }}>
+        <Button
+          onPress={() => executeTransaction(recipientAddress, amount, currency)}
+          disabled={!currency || !amount || !recipientAddress}
+          title="Send"
+        />
+        {/* <Button onPress={fetchBalances} title="Fetch Balances" /> */}
+      </View>
+      {balances && (
+        <View style={styles.balances}>
+          <Text style={styles.balanceText}>
+            MATIC: {Math.round(balances.matic * 100) / 100}
+          </Text>
+          <Text style={styles.balanceText}>USDC: {balances.usdc}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -19,12 +97,10 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    alignItems: "stretch",
-    justifyContent: "start",
-    width: "100%",
-    flexGrow: 1,
-    alignSelf: "stretch",
+    alignItems: "center",
+    justifyContent: "center",
     textAlign: "center",
+    gap: 10,
   },
   title: {
     fontSize: 24,
@@ -33,8 +109,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     borderColor: "gray",
     borderWidth: 1,
-    width: "100%",
-    flexGrow: 0,
     alignSelf: "stretch",
     textAlign: "center",
   },
@@ -45,37 +119,24 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
     marginBottom: 10,
-    flexGrow: 1,
+    flex: 1,
     alignSelf: "stretch",
-    textAlign: "center",
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: "black",
-    flexGrow: 0,
-    maxWidth: 200,
-    alignSelf: "stretch",
-    textAlign: "center",
-  },
-  buttonContainer: {
-    paddingHorizontal: 30,
-    rowGap: 15,
-    paddingVertical: 10,
-    alignSelf: "stretch",
-    textAlign: "center",
-  },
-  buttonText: {
-    color: "white",
+    textAlign: "left",
   },
   balances: {
     marginTop: 20,
+    gap: 20,
   },
   balanceText: {
     fontSize: 18,
     marginBottom: 5,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    width: "100%",
   },
 });

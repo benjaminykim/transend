@@ -21,7 +21,6 @@ export default function LoginScreen({ navigation }) {
   }, []);
 
   if (walletData.address !== "") {
-    console.log(walletData);
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Your Wallet</Text>
