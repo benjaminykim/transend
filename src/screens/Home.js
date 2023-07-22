@@ -14,7 +14,6 @@ export default function HomeScreen() {
     (state) => state.users
   );
   const [balances, setBalances] = useState(null);
-  const [recipientAddress, setRecipientAddress] = useState("");
   // const [recipientENS, setRecipientENS]
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState(null);
@@ -54,7 +53,7 @@ export default function HomeScreen() {
               })
             );
           }}
-          value={scannedWallet || recipientAddress}
+          value={scannedWallet}
           autoCapitalize="none"
         />
         <Input
@@ -93,8 +92,10 @@ export default function HomeScreen() {
       </View>
       <View style={{ gap: 20 }}>
         <Button
-          onPress={() => executeTransaction(recipientAddress, amount, currency)}
-          disabled={!currency || !amount || !recipientAddress}
+          onPress={() =>
+            executeTransaction(scannedWallet, scannedAmount, currency)
+          }
+          disabled={!currency || !scannedAmount || !scannedWallet}
           title="Send"
         />
         {/* <Button onPress={fetchBalances} title="Fetch Balances" /> */}

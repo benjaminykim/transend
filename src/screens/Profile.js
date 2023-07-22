@@ -3,16 +3,24 @@ import React from "react";
 import { Button } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteSession } from "../redux/store/users";
+import { useWalletConnectModal } from "@walletconnect/modal-react-native";
 
 export default function ProfileScreen({ navigation }) {
   const dispatch = useDispatch();
   const { walletData } = useSelector((state) => state.users);
+  const { provider } = useWalletConnectModal();
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Your Wallet</Text>
       <Text style={styles.body}>{walletData.address}</Text>
-      <Button title="Delete Wallet" onPress={() => dispatch(deleteSession())} />
+      <Button
+        title="Delete Wallet"
+        onPress={() => {
+          provider.disconnect();
+          dispatch(deleteSession());
+        }}
+      />
     </View>
   );
 }

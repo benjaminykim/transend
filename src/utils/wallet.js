@@ -1,7 +1,7 @@
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
-import { USDC_CONTRACT_ADDRESS, USDC_ABI } from "./constants";
+import { USDC_CONTRACT_ADDRESS, USDC_ABI, POLYGON_RPC_URL } from "./constants";
 
 export const executeTransaction = async (
   recipientAddress,
