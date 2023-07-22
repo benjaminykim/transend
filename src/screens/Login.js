@@ -1,13 +1,24 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Input } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { createWallet, deleteSession } from "../redux/store/users";
+import { createWallet, deleteSession, loadWallet } from "../redux/store/users";
+import { getWalletData } from "../utils/local-storage";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const { walletData } = useSelector((state) => state.users);
   const [seedPhrase, setSeedPhrase] = useState("");
+
+  useEffect(() => {
+    const checkWallet = async () => {
+      const payload = await getWalletData();
+      if (payload.address !== "") {
+        dispatch(loadWallet(payload));
+      }
+    };
+    checkWallet();
+  }, []);
 
   if (walletData.address !== "") {
     console.log(walletData);

@@ -37,6 +37,13 @@ export const createWallet = createAsyncThunk(
   }
 );
 
+export const loadWallet = createAsyncThunk(
+  "users/loadWallet",
+  async (payload) => {
+    return payload;
+  }
+);
+
 export const userAdapter = createEntityAdapter();
 
 const userSlice = createSlice({
@@ -65,6 +72,10 @@ const userSlice = createSlice({
       state.isLoggedIn = false;
     });
     builder.addCase(createWallet.fulfilled, (state, action) => {
+      state.walletData = action.payload;
+      state.isLoggedIn = true;
+    });
+    builder.addCase(loadWallet.fulfilled, (state, action) => {
       state.walletData = action.payload;
       state.isLoggedIn = true;
     });
