@@ -9,6 +9,7 @@ import {
   HomeScreen,
   ScanScreen,
   ProfileScreen,
+  ReceiveScreen,
 } from "./src/screens";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -39,6 +40,7 @@ function App() {
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Scan" component={ScanScreen} />
+        <Tab.Screen name="Receive" component={ReceiveScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </NavigationContainer>

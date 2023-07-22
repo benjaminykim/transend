@@ -53,8 +53,15 @@ const userSlice = createSlice({
     isLoggedIn: false,
     walletData: { address: "", privateKey: "", mnemonic: "" },
     userData: { phoneNumber: "" },
+    scannedWallet: "",
+    amount: 0,
   }),
-  reducers: {},
+  reducers: {
+    setScannedWallet(state, action) {
+      state.scannedWallet = action.payload.address;
+      state.scannedAmount = action.payload.amount;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchSession.pending, (state) => {
       state.loading = true;
@@ -90,5 +97,5 @@ export const {
   selectTotal: selectTotalUsers,
 } = userAdapter.getSelectors((state) => state.walletData);
 
-export const { setWalletData } = userSlice.actions;
+export const { setScannedWallet } = userSlice.actions;
 export default userSlice.reducer;

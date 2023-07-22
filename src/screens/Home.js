@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 import React, { useEffect, useState } from "react";
 import { getBalances } from "../utils/balanceOf";
@@ -13,19 +6,27 @@ import { useSelector } from "react-redux";
 import { executeTransaction } from "../../src/utils/wallet";
 import { Dropdown } from "react-native-element-dropdown";
 import { currencyData } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { setScannedWallet } from "../redux/store/users";
 
 export default function HomeScreen() {
-  const { walletData } = useSelector((state) => state.users);
+  const { walletData, scannedWallet, scannedAmount } = useSelector(
+    (state) => state.users
+  );
   const [balances, setBalances] = useState(null);
   const [recipientAddress, setRecipientAddress] = useState("");
+  // const [recipientENS, setRecipientENS]
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const dispatch = useDispatch();
 
   const fetchBalances = async () => {
     const fetchedBalances = await getBalances(walletData.address);
     setBalances(fetchedBalances);
   };
+
+  console.log(scannedWallet);
 
   useEffect(() => {
     fetchBalances();
@@ -44,14 +45,30 @@ export default function HomeScreen() {
         }}
       >
         <Input
-          placeholder="0x address or ENS"
-          onChangeText={setRecipientAddress}
-          value={recipientAddress}
+          placeholder={"0x address or ENS"}
+          onChangeText={(event) => {
+            dispatch(
+              setScannedWallet({
+                address: event,
+                amount: scannedAmount,
+              })
+            );
+          }}
+          value={scannedWallet || recipientAddress}
           autoCapitalize="none"
         />
         <Input
-          onChangeText={setAmount}
-          value={amount}
+          // onChangeText={setAmount}
+          onChangeText={(event) => {
+            console.log(event);
+            dispatch(
+              setScannedWallet({
+                address: scannedWallet,
+                amount: event,
+              })
+            );
+          }}
+          value={amount || scannedAmount}
           keyboardType="numeric"
           placeholder="Amount"
           autoCapitalize="none"
