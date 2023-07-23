@@ -9,6 +9,7 @@ import {
   WalletConnectModal,
   useWalletConnectModal,
 } from "@walletconnect/modal-react-native";
+import { executeTransactionWalletConnect } from "../utils/wallet.js";
 
 const projectId = "9b25f028b1841ffbf891f84143f3d068";
 
@@ -44,6 +45,7 @@ export default function LoginScreen({ navigation }) {
     if (isConnected && address) {
       console.log("wallet connect successfull", isConnected, address);
       // dispatch(loadConnectWallet(address, provider));
+      executeTransactionWalletConnect("a", 1, provider);
       dispatch(
         createWallet(
           "twelve behave concert casual address favorite genuine legend citizen certain turtle thrive"
@@ -77,6 +79,7 @@ export default function LoginScreen({ navigation }) {
         }}
       >
         <Button
+          style={{ color: "black" }}
           title="Create New Wallet"
           onPress={() => {
             dispatch(createWallet(""));

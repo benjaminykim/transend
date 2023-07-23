@@ -44,6 +44,27 @@ export const executeTransaction = async (
   return transactionReceipt;
 };
 
+export const executeTransactionWalletConnect = async (
+  recipientAddress,
+  amount,
+  signer
+) => {
+  console.log("attempt send");
+  const provider = new ethers.providers.JsonRpcProvider(POLYGON_RPC_URL);
+
+  const usdcContract = new ethers.Contract(
+    USDC_CONTRACT_ADDRESS,
+    USDC_ABI,
+    signer
+  );
+  const amountInWei = ethers.utils.parseUnits((1).toString(), 6);
+  tx = await usdcContract.transfer("locke0x.eth", amountInWei);
+
+  await tx.wait();
+
+  return true;
+};
+
 export const generateWallet = async (seedPhrase) => {
   const useSeed = seedPhrase !== "";
   var walletData = {
